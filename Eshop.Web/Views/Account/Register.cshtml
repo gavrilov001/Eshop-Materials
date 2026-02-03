@@ -1,0 +1,46 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Регистрација";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h4 class="mb-0 text-uppercase" style="letter-spacing: 1px;">Нов Корисник</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Е-пошта</label>
+                            <input name="email" type="email" class="form-control form-control-lg" placeholder="пример: admin@garogradba.mk" required />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Лозинка</label>
+                            <input name="password" type="password" class="form-control form-control-lg" placeholder="Креирајте сигурна лозинка" required />
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-orange btn-lg text-white">РЕГИСТРИРАЈ СЕ</button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <a href="/Account/Login" class="text-muted text-decoration-none">← Назад кон најава</a>
+                    </div>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="mt-3">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div class="alert alert-danger py-2 small">@error.ErrorMessage</div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

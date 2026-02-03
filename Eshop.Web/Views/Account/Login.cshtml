@@ -1,0 +1,48 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Админ Најава";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h4 class="mb-0 text-uppercase" style="letter-spacing: 1px;">Корисник Најава</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Е-пошта</label>
+                            <input name="email" type="email" class="form-control form-control-lg" placeholder="vashata@email.com" required />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Лозинка</label>
+                            <input name="password" type="password" class="form-control form-control-lg" placeholder="******" required />
+                        </div>
+                        
+                        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-orange btn-lg text-white">НАЈАВИ СЕ</button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="text-muted">Немате профил? <a href="/Account/Register?returnUrl=@ViewData["ReturnUrl"]" class="text-decoration-none fw-bold" style="color: #D35400;">Регистрирајте се тука</a></p>
+                    </div>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="mt-3">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div class="alert alert-danger py-2 small">@error.ErrorMessage</div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

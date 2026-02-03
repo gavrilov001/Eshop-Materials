@@ -1,0 +1,136 @@
+@model Eshop.Web.Models.CheckoutViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Наплата";
+}
+
+<div class="container my-5 pt-5">
+    <div class="row g-5">
+        <div class="col-md-7 col-lg-8">
+            <h4 class="mb-4 fw-bold">Податоци за достава</h4>
+            <div class="card border-0 shadow-sm p-4">
+                <form asp-action="Checkout" method="post" class="needs-validation">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label asp-for="Name" class="form-label fw-semibold">Име</label>
+                            <input asp-for="Name" class="form-control custom-input" placeholder="Вашето име" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label asp-for="Surname" class="form-label fw-semibold">Презиме</label>
+                            <input asp-for="Surname" class="form-control custom-input" placeholder="Вашето презиме" />
+                            <span asp-validation-for="Surname" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Phone" class="form-label fw-semibold">Телефонски број</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone"></i></span>
+                                <input asp-for="Phone" class="form-control custom-input border-start-0" placeholder="07X XXX XXX" />
+                            </div>
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Address" class="form-label fw-semibold">Адреса на живеење</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-geo-alt"></i></span>
+                                <input asp-for="Address" class="form-control custom-input border-start-0" placeholder="Улица, број, град" />
+                            </div>
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 opacity-25">
+
+                    <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" id="save-info">
+                        <label class="form-check-label small text-muted" for="save-info">Зачувај ги овие информации за следната нарачка</label>
+                    </div>
+
+                    <button class="btn btn-checkout w-100 py-3 fw-bold" type="submit">
+                        ПОТВРДИ НАРАЧКА <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-5 col-lg-4">
+            <h4 class="d-flex justify-content-between align-items-center mb-4 fw-bold">
+                <span>Твојата кошничка</span>
+            </h4>
+            <div class="card border-0 shadow-sm p-4 sticky-top" style="top: 100px;">
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm px-0 py-3">
+                        <div>
+                            <h6 class="my-0">Вкупно производи</h6>
+                            <small class="text-muted">Стандардна достава</small>
+                        </div>
+                        <span class="text-muted">Бесплатна</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-3">
+                        <span class="fw-bold">ВКУПНО ЗА ПЛАЌАЊЕ</span>
+                        <strong class="orange-price">@Model.Total.ToString("N2") <span class="small text-muted">ден</span></strong>
+                    </li>
+                </ul>
+
+                <div class="bg-light p-3 rounded-3 mb-3">
+                    <div class="d-flex align-items-center text-dark">
+                        <i class="bi bi-shield-check fs-4 me-2 text-success"></i>
+                        <span class="small fw-semibold">Безбедно плаќање и брза достава</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --m-orange: #D35400;
+        --m-dark: #1a1d23;
+    }
+
+    .custom-input {
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        transition: 0.3s;
+    }
+
+    .custom-input:focus {
+        border-color: var(--m-orange);
+        box-shadow: 0 0 0 0.25rem rgba(211, 84, 0, 0.1);
+    }
+
+    .btn-checkout {
+        background-color: var(--m-orange);
+        color: white;
+        border-radius: 8px;
+        transition: 0.3s ease;
+        border: none;
+    }
+
+    .btn-checkout:hover {
+        background-color: #b34700;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(211, 84, 0, 0.3);
+    }
+
+    .orange-price {
+        color: var(--m-orange);
+        font-size: 1.2rem;
+    }
+
+    .card {
+        border-radius: 15px;
+    }
+
+    .input-group-text {
+        border-radius: 8px 0 0 8px;
+        border: 1px solid #dee2e6;
+    }
+</style>

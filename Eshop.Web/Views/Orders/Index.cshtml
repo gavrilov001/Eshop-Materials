@@ -1,0 +1,33 @@
+@model IEnumerable<Eshop.Domain.Entities.Order>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Нарачки</h2>
+
+<table class="table">
+    <thead>
+        <tr><th>Id</th><th>Име</th><th>Телефон</th><th>Вкупно</th><th>Дата</th><th></th></tr>
+    </thead>
+    <tbody>
+    @foreach(var o in Model)
+    {
+        <tr>
+            <td>@o.Id</td>
+            <td>@o.CustomerName @o.CustomerSurname</td>
+            <td>@o.CustomerPhone</td>
+            <td>@o.TotalPrice</td>
+            <td>@o.DateCreated</td>
+            <td>
+                <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@o.Id">Details</a>
+                <a class="btn btn-sm btn-outline-secondary ms-1" asp-action="Edit" asp-route-id="@o.Id">Edit</a>
+
+                <form asp-action="Delete" method="post" asp-route-id="@o.Id" style="display:inline-block; margin-left:6px;" onsubmit="return confirm('На сигурно ли сакате да ја избришете нарачката?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

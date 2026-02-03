@@ -1,0 +1,250 @@
+@model IEnumerable<Eshop.Domain.Entities.Product>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = ViewBag.CategoryTitle ?? "Производи";
+}
+
+<div class="container mt-2 mb-5">
+    <div class="text-center mb-4 pt-2">
+        <h3 class="fw-bold text-muted text-uppercase mb-2" style="letter-spacing: 3px; font-size: 1.1rem;">
+            @(ViewBag.CategoryTitle == "Градежни материјали" ? "Песок / Цемент" : ViewBag.CategoryTitle)
+        </h3>
+        <div class="mx-auto" style="width: 35px; height: 2px; background-color: #dee2e6;"></div>
+    </div>
+
+    <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-lg-4">
+        @foreach (var p in Model)
+        {
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm custom-product-card">
+                    
+                    <div class="product-img-container p-3">
+                        <img src="@p.ImageUrl" class="img-fluid" alt="@p.Name" />
+                    </div>
+
+                    <div class="card-body d-flex flex-column align-items-center text-center px-3 pb-4">
+                        <div class="mt-2 mb-1">
+                            <h5 class="product-title fw-bold text-dark m-0">
+                                @p.Name
+                            </h5>
+                        </div>
+                        
+                        <div class="product-price mb-3">
+            @p.Price.ToString("N0") <span class="currency">ден</span>
+        <span class="unit-text">/ @p.Unit</span>
+        </div>
+                        
+                        
+
+                        <form method="post" asp-controller="Cart" asp-action="Add" class="w-100 mt-auto">
+                            <input type="hidden" name="productId" value="@p.Id" />
+                            <input type="hidden" name="quantity" value="1" />
+                            
+                            <button class="btn btn-add-to-cart w-100 shadow-sm" type="submit">
+                                Додај во кошничка
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    /* Намалување на растојанието во главниот контејнер */
+    .mt-2 {
+        margin-top: 0.5rem !important;
+    }
+
+    .pt-2 {
+        padding-top: 0.5rem !important;
+    }
+
+    body {
+        background-color: #fcfcfc;
+    }
+
+    .custom-product-card {
+        border-radius: 20px !important;
+        transition: transform 0.2s ease;
+        background-color: #ffffff;
+        border: 1px solid rgba(0,0,0,0.02) !important;
+    }
+
+    .product-img-container {
+        height: 190px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-img-container img {
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        letter-spacing: -0.2px;
+    }
+
+    .product-price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2b5bc7;
+    }
+
+    .btn-add-to-cart {
+        background-color: #2b5bc7;
+        color: white;
+        border-radius: 50px;
+        padding: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: none;
+    }
+
+    .btn-add-to-cart:hover {
+        background-color: #1e4191;
+        color: white;
+    }
+
+    .custom-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.06) !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Attach AJAX submit to all add-to-cart forms on this page
+        document.querySelectorAll('form[asp-controller="Cart"][asp-action="Add"], form[action][method="post"]').forEach(function (form) {
+            // Only attach to forms that contain a .btn-add-to-cart button
+            if (!form.querySelector('.btn-add-to-cart')) return;
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                var url = form.action || (form.getAttribute('asp-controller') ? '/Cart/Add' : window.location.href);
+                var formData = new FormData(form);
+
+                fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(function (resp) {
+                    // If response is JSON, show message; otherwise, if redirected to login, follow
+                    if (resp.redirected) {
+                        window.location = resp.url;
+                        return null;
+                    }
+                    var ct = resp.headers.get('content-type') || '';
+                    if (ct.indexOf('application/json') !== -1) return resp.json();
+                    return resp.text();
+                })
+                .then(function (data) {
+                    if (!data) return;
+                    var msg = (data && data.message) ? data.message : 'Успешно додаден продукт';
+                    showTemporaryToast(msg);
+
+                    // Update cart badge if server returned the count
+                    if (data && typeof data.cartItemCount !== 'undefined') {
+                        var badge = document.querySelector('.badge') || document.querySelector('.cart-badge');
+                        if (badge) badge.textContent = data.cartItemCount;
+                    }
+                })
+                .catch(function (err) {
+                    console.error('Add to cart failed', err);
+                    showTemporaryToast('Се појави грешка. Обидете се повторно.');
+                });
+            });
+        });
+
+        function showTemporaryToast(message) {
+            var container = document.getElementById('site-toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'site-toast-container';
+                // Try to place the toast container just below the products grid
+                var productsGrid = document.querySelector('.row.g-4') || document.querySelector('.row');
+                if (productsGrid && productsGrid.parentNode) {
+                    // Insert the container after the products grid so it's visually under the products
+                    productsGrid.parentNode.insertBefore(container, productsGrid.nextSibling);
+                    container.style.display = 'flex';
+                    container.style.justifyContent = 'center';
+                    container.style.marginTop = '0.8rem';
+                } else {
+                    // Fallback to fixed top-right if products grid not found
+                    container.style.position = 'fixed';
+                    container.style.top = '1rem';
+                    container.style.right = '1rem';
+                }
+                container.style.zIndex = 3000;
+            }
+
+            var toast = document.createElement('div');
+            toast.className = 'site-toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            // Animate in
+            requestAnimationFrame(function () {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+            });
+
+            // Remove after a short time (1400ms)
+            setTimeout(function () {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-6px)';
+                setTimeout(function () { toast.remove(); }, 300);
+            }, 1400);
+        }
+    });
+</script>
+
+<style>
+    /* Simple toast styling */
+    .site-toast {
+        display: inline-block;
+        margin-bottom: 0.35rem;
+        padding: 0.4rem 0.75rem;
+    /* Neutral gray background for the notification */
+    background: #6c757d; /* bootstrap secondary / gray */
+        color: white;
+        border-radius: 6px;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+        opacity: 0;
+        transform: translateY(-6px);
+        transition: opacity 0.18s ease, transform 0.18s ease;
+        font-weight: 500; /* less bold */
+        max-width: 420px;
+        width: auto;
+        text-align: center;
+        font-size: 0.95rem;
+    }
+    /* Ги додаваме овие под .product-price */
+.product-price {
+    font-size: 1.3rem; /* Малку поголема цена */
+    font-weight: 800;
+    color: #D35400; /* Портокалова боја за да одговара на брендот */
+}
+
+.currency {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.unit-text {
+    font-size: 0.9rem;
+    color: black; /* Сива боја за единицата мерка */
+    font-weight: 600;
+    
+}
+</style>

@@ -1,0 +1,85 @@
+@model IEnumerable<dynamic>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Кошничка";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold m-0">Вашата кошничка</h2>
+        <span class="text-muted">@Model.Count() производи</span>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="border-0 ps-4 py-3">Производ</th>
+                            <th class="border-0 py-3">Цена</th>
+                            <th class="border-0 py-3">Количина</th>
+                            <th class="border-0 py-3">Вкупно</th>
+                            <th class="border-0 pe-4 py-3 text-end">Акција</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 py-3">
+                                    <span class="fw-bold text-dark">@item.Product.Name</span>
+                                </td>
+                                <td class="py-3">@item.Price ден.</td>
+                                <td class="py-3">
+                                    <form method="post" asp-action="Update" class="d-flex align-items-center gap-2">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <input type="number" name="quantity" value="@item.Quantity" min="1" 
+                                               class="form-control form-control-sm" style="width:70px" />
+                                        <button class="btn btn-sm btn-outline-secondary" type="submit">
+                                            <i class="bi bi-arrow-clockwise"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="py-3 fw-bold">@(item.Price * item.Quantity) ден.</td>
+                                <td class="pe-4 py-3 text-end">
+                                    <form method="post" asp-action="Remove">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button class="btn btn-sm btn-outline-danger" type="submit">
+                                            <i class="bi bi-trash"></i> Избриши
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @{
+        decimal total = 0M;
+        foreach (var item in Model) { total += (decimal)item.Price * (int)item.Quantity; }
+    }
+
+    <div class="mt-4 p-4 bg-white rounded shadow-sm d-flex justify-content-between align-items-center">
+        <div>
+            <a href="/" class="btn btn-link text-muted text-decoration-none p-0">
+                <i class="bi bi-arrow-left"></i> Назад кон производите
+            </a>
+        </div>
+        <div class="text-end">
+            <h4 class="mb-3">Вкупно за плаќање: <span class="text-primary fw-bold" style="color: var(--brand-orange) !important;">@total ден.</span></h4>
+            <a class="btn btn-contact-nav btn-lg px-5 shadow-sm" asp-action="Checkout">
+                КОМПЛЕТИРАЈ НАРАЧКА <i class="bi bi-cart-check ms-2"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Мала корекција ако не се вчитани иконите */
+    .bi { vertical-align: middle; }
+    .table thead th { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: #666; }
+</style>

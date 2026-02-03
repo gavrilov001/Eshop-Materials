@@ -1,0 +1,66 @@
+@model Eshop.Domain.Entities.Product
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Product</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Price"></label>
+        <input asp-for="Price" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+    <label asp-for="Unit" class="form-label">Единица мерка</label>
+    <select asp-for="Unit" class="form-select">
+        <option value="парче">парче</option>
+        <option value="м³">кубик (м³)</option>
+        <option value="м²">квадрат (м²)</option>
+        <option value="кг">килограм (кг)</option>
+        <option value="вреќа">вреќа</option>
+        <option value="л">литар (л)</option>
+    </select>
+    <span asp-validation-for="Unit" class="text-danger"></span>
+</div>
+    <div>
+        <label asp-for="ImageUrl"></label>
+        <input asp-for="ImageUrl" />
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Category"></label>
+        <select asp-for="Category" class="form-select" aria-label="Category select">
+            <optgroup label="Градежни материјали">
+                <option value="Песок / Цемент">Песок / Цемент</option>
+                <option value="Железо">Железо</option>
+                <option value="Блокови">Блокови</option>
+                <option value="Керамиди и покривки">Керамиди и покривки</option>
+            </optgroup>
+            <optgroup label="Останато">
+                <option value="Огради">Огради</option>
+                <option value="Пелети">Пелети</option>
+            </optgroup>
+        </select>
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="IsInStock"></label>
+        <input asp-for="IsInStock" />
+        <span asp-validation-for="IsInStock" class="text-danger"></span>
+    </div>
+    <button type="submit">Create</button>
+</form>

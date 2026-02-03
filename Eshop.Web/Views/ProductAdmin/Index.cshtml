@@ -1,0 +1,29 @@
+@model IEnumerable<Eshop.Domain.Entities.Product>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Products (Admin)</h2>
+<p><a href="/ProductAdmin/Create">Create new</a> | <a href="/Account/Logout" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a></p>
+<form id="logoutForm" method="post" action="/Account/Logout"></form>
+
+<table>
+    <thead>
+        <tr><th>Name</th><th>Price</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+    @foreach(var p in Model)
+    {
+        <tr>
+            <td>@p.Name</td>
+            <td>@p.Price</td>
+            <td>
+                <a href="/ProductAdmin/Edit/@p.Id">Edit</a>
+                <form method="post" action="/ProductAdmin/Delete/@p.Id" style="display:inline">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

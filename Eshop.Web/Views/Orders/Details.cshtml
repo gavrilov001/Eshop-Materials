@@ -1,0 +1,29 @@
+@model Eshop.Domain.Entities.Order
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Детали на нарачка</h2>
+
+<div>
+    <p><strong>Име:</strong> @Model.CustomerName @Model.CustomerSurname</p>
+    <p><strong>Телефон:</strong> @Model.CustomerPhone</p>
+    <p><strong>Адреса:</strong> @Model.CustomerAddress</p>
+    <p><strong>Вкупно:</strong> @Model.TotalPrice</p>
+    <p><strong>Дата:</strong> @Model.DateCreated</p>
+</div>
+
+<h4>Содржина</h4>
+<table class="table">
+    <thead><tr><th>Продукт</th><th>Количина</th><th>Цена</th></tr></thead>
+    <tbody>
+    @foreach(var i in Model.Items)
+    {
+        <tr>
+            <td>@i.Product?.Name</td>
+            <td>@i.Quantity</td>
+            <td>@i.Price</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,64 @@
+    @model Eshop.Domain.Entities.Product
+    @{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <h2>Edit Product</h2>
+
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <div>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Description"></label>
+            <input asp-for="Description" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Price"></label>
+            <input asp-for="Price" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+    <label asp-for="Unit" class="form-label">Единица мерка</label>
+    <select asp-for="Unit" class="form-select">
+        <option value="парче" selected="@(Model.Unit == "парче" ? "selected" : null)">парче</option>
+        <option value="м³" selected="@(Model.Unit == "м³" ? "selected" : null)">кубик (м³)</option>
+        <option value="м²" selected="@(Model.Unit == "м²" ? "selected" : null)">квадрат (м²)</option>
+        <option value="кг" selected="@(Model.Unit == "кг" ? "selected" : null)">килограм (кг)</option>
+        <option value="вреќа" selected="@(Model.Unit == "вреќа" ? "selected" : null)">вреќа</option>
+    </select>
+    <span asp-validation-for="Unit" class="text-danger"></span>
+</div>
+        <div>
+            <label asp-for="ImageUrl"></label>
+            <input asp-for="ImageUrl" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Category"></label>
+            <select asp-for="Category" class="form-select" aria-label="Category select">
+                <optgroup label="Градежни материјали">
+                    <option value="Песок / Цемент" selected="@(Model.Category == "Песок / Цемент" ? "selected" : null)">Песок / Цемент</option>
+                    <option value="Железо" selected="@(Model.Category == "Железо" ? "selected" : null)">Железо</option>
+                    <option value="Блокови" selected="@(Model.Category == "Блокови" ? "selected" : null)">Блокови</option>
+                    <option value="Керамиди и покривки" selected="@(Model.Category == "Керамиди и покривки" ? "selected" : null)">Керамиди и покривки</option>
+                </optgroup>
+                <optgroup label="Останато">
+                    <option value="Огради" selected="@(Model.Category == "Огради" ? "selected" : null)">Огради</option>
+                    <option value="Пелети" selected="@(Model.Category == "Пелети" ? "selected" : null)">Пелети</option>
+                </optgroup>
+            </select>
+            <span asp-validation-for="Category" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="IsInStock"></label>
+            <input asp-for="IsInStock" />
+            <span asp-validation-for="IsInStock" class="text-danger"></span>
+        </div>
+        <button type="submit">Save</button>
+    </form>

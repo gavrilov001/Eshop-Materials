@@ -1,0 +1,11 @@
+@model int
+
+<a class="nav-link position-relative" asp-controller="Cart" asp-action="Index" title="Cart">
+    <span style="font-size:1.25rem;">🛒</span>
+
+    <span id="cart-count"
+          class="badge bg-danger position-absolute"
+          style="top:0; right:0; transform:translate(30%, -30%); @(Model == 0 ? "display:none" : "")">
+        @Model
+    </span>
+</a>
