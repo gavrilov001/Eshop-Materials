@@ -5,7 +5,7 @@ using Eshop.Domain.Entities;
 
 namespace Eshop.Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public class ProductAdminController : Controller
     {
         private readonly EshopDbContext _db;
@@ -15,6 +15,11 @@ namespace Eshop.Web.Controllers
         {
             _db = db;
             _env = env;
+        }
+
+        private bool IsAuthorizedAdmin()
+        {
+            return User.Identity?.Name?.ToLower() == "vlatko.gavr@hotmail.com";
         }
 
         public IActionResult Index()
