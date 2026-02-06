@@ -94,6 +94,7 @@
                                         <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-category="Градежни материјали" asp-route-subcategory="Песок / Цемент">Песок / Цемент</a></li>
                                         <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-category="Градежни материјали" asp-route-subcategory="Железо">Железо</a></li>
                                         <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-category="Градежни материјали" asp-route-subcategory="Блокови">Блокови</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-category="Градежни материјали" asp-route-subcategory="Керамиди и покривки">Керамиди и покривки</a></li>
                                     </ul>
                                 </li>
                                 <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-category="Огради">Огради</a></li>
@@ -107,16 +108,24 @@
                         <li class="nav-item me-2">@await Component.InvokeAsync("CartIcon")</li>
 
                         @* Admin link on the right side, next to logout/login *@
-                        @if (User?.Identity?.IsAuthenticated ?? false && User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item dropdown me-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">Админ</a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" asp-controller="ProductAdmin" asp-action="Index">Продукти (Admin)</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Orders" asp-action="Index">Нарачки</a></li>
-                                </ul>
-                            </li>
-                        }
+                        @* Најди го овој дел во Layout.cshtml и замени го вака: *@
+
+@if (User?.Identity?.IsAuthenticated ?? false)
+{
+    // Проверка дали најавениот мејл е точно твојот
+    bool isSuperAdmin = User.Identity.Name?.ToLower() == "vlatko.gavr@hotmail.com";
+
+    if (isSuperAdmin)
+    {
+        <li class="nav-item dropdown me-2">
+            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">Админ</a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" asp-controller="ProductAdmin" asp-action="Index">Продукти (Admin)</a></li>
+                <li><a class="dropdown-item" asp-controller="Orders" asp-action="Index">Нарачки</a></li>
+            </ul>
+        </li>
+    }
+}
 
                         @if (User?.Identity?.IsAuthenticated ?? false) {
                             <li class="nav-item me-2">

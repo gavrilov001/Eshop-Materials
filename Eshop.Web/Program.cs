@@ -27,6 +27,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Account/Login";
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => 
+        policy.RequireAssertion(context => 
+            context.User.Identity != null && 
+            context.User.Identity.IsAuthenticated && 
+            context.User.Identity.Name == "vlatko.gavr@hotmail.com"));
+});
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<EshopDbContext>(options => options.UseSqlite(connectionString));

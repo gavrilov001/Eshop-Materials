@@ -129,7 +129,7 @@
                 var url = form.action || (form.getAttribute('asp-controller') ? '/Cart/Add' : window.location.href);
                 var formData = new FormData(form);
 
-                fetch(url, {
+                fetch('/cart/add', {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -151,11 +151,16 @@
                     if (!data) return;
                     var msg = (data && data.message) ? data.message : 'Успешно додаден продукт';
                     showTemporaryToast(msg);
-
+                    var badge = document.getElementById('cart-count');
                     // Update cart badge if server returned the count
                     if (data && typeof data.cartItemCount !== 'undefined') {
                         var badge = document.querySelector('.badge') || document.querySelector('.cart-badge');
                         if (badge) badge.textContent = data.cartItemCount;
+                        if (data.cartItemCount > 0) {
+            badge.style.display = 'block'; 
+        } else {
+            badge.style.display = 'none';
+        }
                     }
                 })
                 .catch(function (err) {
